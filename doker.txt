@@ -1,0 +1,42 @@
+启动docker容器
+1、查看容器id
+docker ps -a
+2、启动容器
+docker start 容器id（CINTAINER ID 对应的值）
+3、查看容器启动状态
+docker ps -a
+说明：STATUS 对应的是容器当前状态： Exited表示未启动 Up 表示已启动
+4、进入容器进行操作（3种方法各有千秋，推荐第三种）说明：容器只是一个进程，退出来，这个进程也就结束了
+1）attach  一个容器指定一个进程，这个容器退出了，它生成周期也就结束了，也就退出了
+      具体命令：docker attach 容器id 进入容器 查看状态，然后exit退出容器 在查看各容器状态
+2）exec  命令
+     docker exec -it 容器id  COMMAND地址（双引号中的值）
+     命令解释：
+     docker exec ： 在运行的容器中执行命令
+     OPTIONS说明：
+     -d：分离模式：在后台运行
+     -i：及时没有附加也保持STDIN打开
+     -t：分配一个伪终端
+3)  nsenter命令
+     docker inspect  --format "{{.State.Pid}}"  容器id （查找该容器的运行的pid）
+     nsenter -t PID(上面查询到的pid) -u -i -n   （此时已进入容器） 
+     exec  退出后再查看容器状态 docker ps -a 发现容器还处于运行状态
+
+可以写一个脚本方便进入容器
+1、创建脚本文件
+cat>> fileanme
+cat>>shelldocker.sh
+vim shelldocker.sh
+将如下内容写入脚本
+#!/bin/bash
+PID=$(docker inspect --format "{{.State.Pid}}" $1)
+nsenter -t $PID -u -i -n
+#$1 为容器id 第一句根据容器id返回该容器的进程pid
+#第二句将第一句得到的pid放入其中 并运行语句
+#该脚本具体执行方式为  ./shelldocker.sh 93e8950b2d3e 就可以启动该容器
+
+
+未完待续。。。。
+参考网址：https://blog.csdn.net/weixin_41515615/article/details/81349688
+
+
