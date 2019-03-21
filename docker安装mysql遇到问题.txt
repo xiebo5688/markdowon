@@ -1,0 +1,19 @@
+1、远程连接mysql数据库报错
+Host is not allowed to connect to this MySQL server
+主机不允许连接到此MySQL服务器。
+解决办法：
+进入docker 安装的mysql
+docker run --name mysql02 -e MYSQL_ROOT_PASSWORD=1234567 -d mysql
+登录mysql
+MySQL mysql -u root -p 1234567
+执行use mysql;
+执行update user set host = '%' where user = 'root';这一句执行完可能会报错，不用管它。
+执行FLUSH PRIVILEGES;
+经过以上步骤 远程可以连接上了
+
+
+2、远程连接上了当报错
+Authentication plugin 'caching_sha2_password' cannot be loaded
+同上一样先登录docker上面的mysql然后执行语句：
+ALTER  USER  'root'  IDENTIFIED  WITH  mysql_native_password  BY  '1234567';  
+原因：之前root的密码没有设置默认为空 导致报错 这手动设置root密码为 1234567  然后重新连接登录完美解决

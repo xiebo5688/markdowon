@@ -35,9 +35,6 @@ nsenter -t $PID -u -i -n
 #第二句将第一句得到的pid放入其中 并运行语句
 #该脚本具体执行方式为  ./shelldocker.sh 93e8950b2d3e 就可以启动该容器
 
-下载mysql
-docker pull mysql
-启动mysql
 
 未完待续。。。。
 参考网址：https://blog.csdn.net/weixin_41515615/article/details/81349688
